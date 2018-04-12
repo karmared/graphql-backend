@@ -1,0 +1,14 @@
+{
+  "delay": 3000,
+  "ext": "js",
+  "watch": [
+    "./src",
+    ".env"
+  ],
+  "execMap": {
+    "js": "babel-node"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  }
+}
