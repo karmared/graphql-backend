@@ -9,11 +9,11 @@ const graphqlWithTopic = payload =>
       process.env.KARMA_PRODUCER_TOPIC,
       process.env.KARMA_CONSUMER_TOPIC,
       payload
-    ).then(({ data, errors }) => {
-      if (errors)
-        return reject(errors)
-      resolve(data)
-    })
+    )
+      .then(({ data, errors }) => {
+        if (errors) return reject(errors)
+        resolve(data)
+      })
   })
 
 

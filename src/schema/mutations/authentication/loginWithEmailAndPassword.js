@@ -1,5 +1,7 @@
+import store from "/store"
 import { jwtSign } from "/utils"
 import { graphql } from "/transport"
+import { validatePassword } from "/utils"
 import { createDefinition } from "/schema/utils"
 
 
@@ -23,14 +25,11 @@ const definition = `
 
 const getUserIdQuery = `
   query q($email: String!) {
-    getUserIdByEmail(email: $email)
-  }
-`
-
-
-const validateUserPasswordQuery = `
-  query q($id: ID!, $password: String!) {
-    validateUserPassword(id: $id, password: $password)
+    collection(name: "users") {
+      ... on Users {
+        getIdByEmail(email: $email)
+      }
+    }
   }
 `
 
@@ -38,24 +37,19 @@ const validateUserPasswordQuery = `
 const loginWithEmailAndPassword = async (root, { input }) => {
   const id = await graphql({
     query: getUserIdQuery,
-    variables: { email: input.email }
-  }).then(({ getUserIdByEmail }) => getUserIdByEmail)
+    variables: { email: input.email },
+  }).then(data => data.collection.getIdByEmail)
 
   if (id === null)
     throw new Error("User not found")
 
-  const valid = await graphql({
-    query: validateUserPasswordQuery,
-    variables: { id, password: input.password }
-  }).then(({ validateUserPassword }) => validateUserPassword)
+  const user = await store.node("users", id)
 
-  if (valid === false)
+  if (validatePassword(user.password, input.password) === false)
     throw new Error("User not found")
 
-  const token = jwtSign({ sub: id })
-
   return {
-    token
+    token: jwtSign({ sub: user.id, iss: "Karma.Red" })
   }
 }
 
