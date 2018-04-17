@@ -6,29 +6,29 @@ import { createDefinition } from "/schema/utils"
 
 const definition = `
 
-  input RegisterUserInput {
+  input ResetPasswordInput {
     email: String!
   }
 
-  type RegisterUserPayload {
+  type ResetPasswordPayload {
     status: Boolean!
   }
 
   extend type Mutation {
-    registerUser(input: RegisterUserInput!): RegisterUserPayload!
+    resetPassword(input: ResetPasswordInput!): ResetPasswordPayload!
   }
 
 `
 
 
-const expireRegistrationTokens = async email => {
+const expirePasswordResetTokens = async id => {
   const connection = await store.connect()
 
   await store.table("tokens")
     .filter(token => {
       return store.and(
-        token("email").eq(email),
-        token("kind").eq("registration")
+        token("user")("id").eq(id),
+        token("kind").eq("password-reset")
       )
     })
     .update({
@@ -42,34 +42,35 @@ const expireRegistrationTokens = async email => {
 }
 
 
-const registerUser = async (root, { input }) => {
+const resetPassword = async (root, { input }) => {
   const email = input.email.trim().toLowerCase()
+  const user = await store.node.getByIndex("User", email, "email").catch(error => null)
 
-  const user = await store.node
-    .getByIndex("User", email, "email")
-    .catch(error => null)
-
-  if (user !== null)
-    throw new ValidationError([{
-      keyword: "unique",
+  if (user === null)
+    throw new ValidationError({
+      keyword: "presence",
       dataPath: "/email",
-    }])
+    })
 
-  await expireRegistrationTokens(email)
+  await expirePasswordResetTokens(user.id)
 
   const tokenId = await store.node.create("Token", {
-    kind: "registration",
-    email: email,
+    kind: "password-reset",
+    user: {
+      id: user.id,
+    },
   })
 
   console.log(`Created token with id: ${tokenId}`)
+
   const status = await mailer({
-    kind: "registration",
+    kind: "password-reset",
     receiver: email,
     params: {
       code: tokenId,
     }
   }).then(({ status }) => status)
+
 
   return {
     status
@@ -80,7 +81,7 @@ const registerUser = async (root, { input }) => {
 export default createDefinition(
   definition, {
     Mutation: {
-      registerUser
+      resetPassword
     }
   }
 )

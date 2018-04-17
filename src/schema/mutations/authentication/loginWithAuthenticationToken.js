@@ -1,6 +1,6 @@
 import store from "/store"
 import { jwtSign } from "/utils"
-import { graphql } from "/transport"
+import { ValidationError } from "/errors"
 import { createDefinition } from "/schema/utils"
 
 
@@ -10,47 +10,91 @@ const definition = `
   }
 
   type LoginWithAuthenticationTokenPayload {
+    kind: String!
     token: String!
   }
 
   extend type Mutation {
     loginWithAuthenticationToken(
       input: LoginWithAuthenticationTokenInput!
-    ): LoginWithAuthenticationTokenPayload
+    ): LoginWithAuthenticationTokenPayload!
   }
 `
 
 
-const createUserQuery = `
-  query q($attributes: String!) {
-    collection(name: "users") {
-      create(attributes: $attributes)
-    }
+const validateToken = token => {
+  if (token === null)
+    throw new ValidationError({
+      keyword: "presence",
+      dataPath: "/token",
+    })
+
+  if (token.expired_at)
+    throw new ValidationError({
+      keyword: "expired",
+      dataPath: "/token",
+    })
+
+  if (token.accepted_at)
+    throw new ValidationError({
+      keyword: "accepted",
+      dataPath: "/token",
+    })
+}
+
+
+const tokenSideEffect = async token => {
+  switch (token.kind) {
+    case "password-reset":
+      await store.node.update("User", token.user.id, {
+        password: null
+      })
+      return
+    default:
+      return
   }
-`
+}
 
 
-const createUser = async attributes => {
-  return store.node.create("users", attributes).catch(error => null)
+const ensureUserByToken = async token => {
+  if (token.user && token.user.id)
+    return store.node.get("User", token.user.id).catch(error => null)
+
+  if (token.email) {
+    const user = await store.node.getByIndex("User", token.email, "email").catch(error => null)
+
+    if (user !== null) return user
+
+    const id = await store.node.create("User", {
+      email: token.email
+    })
+
+    return store.node.get("User", id).catch(error => null)
+  }
 }
 
 
 const loginWithAuthenticationToken = async (root, { input }) => {
-  const token = await store.node("tokens", input.token)
+  const token = await store.node.get("Token", input.token).catch(error => null)
 
-  if (token === null)
-    throw new Error("Token not found")
-
-  const id = token.user.id || await createUser({ email: token.user.email })
-  const user = await store.node("users", id)
-
-  await store.node.update("tokens", token.id, { activated_at: new Date })
+  validateToken(token)
+  const user = await ensureUserByToken(token)
 
   if (user === null)
-    throw new Error("User not found")
+    throw new ValidationError({
+      keyword: "presence",
+      dataPath: "/user",
+    })
+
+  await tokenSideEffect(token)
+
+  await store.node.update("Token", token.id, {
+    accepted_at: store.now()
+  })
 
   return {
-    token: jwtSign({ sub: user.id, iss: "Karma.Red" })
+    kind: token.kind,
+    token: jwtSign({ sub: user.id, iss: "Karma.Red" }),
   }
 }
 

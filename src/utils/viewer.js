@@ -1,3 +1,4 @@
+import store from "/store"
 import { jwtVerify } from "/utils"
 
 
@@ -6,7 +7,7 @@ const TOKEN_PREFIX="Bearer "
 
 const fetchViewer = async token => {
   const { sub } = jwtVerify(token)
-  return sub
+  return store.node.get("User", sub).catch(error => null)
 }
 
 

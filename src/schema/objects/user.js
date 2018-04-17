@@ -1,18 +1,26 @@
+import { globalIdField, createDefinition } from "/schema/utils"
+
+
 const definition = `
   type User implements Node {
     id: ID!
-    name: String
+    email: String!
+    shouldProvidePassword: Boolean!
   }
 `
 
 
-const enhancement = {
-  User: {
-  }
+const shouldProvidePassword = user => {
+  return user.password === null || user.password === void 0
 }
 
 
-export default {
+export default createDefinition(
   definition,
-  enhancement,
-}
+  {
+    User: {
+      id: globalIdField(),
+      shouldProvidePassword,
+    }
+  }
+)

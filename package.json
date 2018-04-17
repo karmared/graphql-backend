@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "build": "rm -rf build && mkdir build && babel src -d build",
-    "serve": "node build"
+    "serve": "node build",
+    "migrate": "babel-node src/migrate"
   },
   "dependencies": {
     "@karmared/kafka-transport": "^0.0.2",
@@ -15,6 +16,8 @@
     "babel-plugin-module-resolver": "^3.0.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-3": "^6.24.1",
+    "chalk": "^2.4.0",
+    "cors": "^2.8.4",
     "dotenv": "^5.0.1",
     "dotenv-expand": "^4.0.1",
     "express-graphql": "^0.6.11",
@@ -24,6 +27,7 @@
     "msgpack": "^1.0.2",
     "no-kafka": "^3.2.9",
     "nodemon": "^1.14.11",
+    "rethinkdb": "^2.3.3",
     "rxjs": "^5.5.6",
     "server": "^1.0.17",
     "shortid": "^2.2.8"

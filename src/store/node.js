@@ -1,68 +1,106 @@
-import { graphql } from "/transport"
+import r from "/store"
+import shortid from "shortid"
+import { fromGlobalId } from "/schema/utils"
 
 
-const query = `
-  query q($name: String!, $id: ID!) {
-    collection(name: $name) {
-      get(id: $id) {
-        attributes
+const NodeTables = new Map([
+  ["User", "users"],
+  ["Token", "tokens"],
+])
+
+
+const get = async (type, id = null) => {
+  if (id === null)
+    ({ type, id } = fromGlobalId(type))
+
+  if (!NodeTables.has(type))
+    return null
+
+  const connection = await r.connect()
+
+  return r.table(NodeTables.get(type))
+    .get(id)
+    .run(connection)
+    .then(result => {
+      connection.close()
+
+      if (result === null) return null
+
+      return {
+        ...result,
+        __type: type,
       }
-    }
-  }
-`
-
-
-const createQuery = `
-  query q($name: String!, $attributes: String!) {
-    collection(name: $name) {
-      create(attributes: $attributes)
-    }
-  }
-`
-
-
-const updateQuery = `
-  query q($name: String!, $id: ID!, $attributes: String!) {
-    collection(name: $name) {
-      update(id: $id, attributes: $attributes)
-    }
-  }
-`
-
-
-const node = async (name, id) => {
-  return graphql({
-    query,
-    variables: { id, name }
-  })
-    .then(data => data.collection.get.attributes)
-    .then(attributes => JSON.parse(attributes))
-    .then(({ _id, ...attributes }) => ({ id: _id, ...attributes }))
-    .catch(error => null)
+    })
 }
 
 
-node.create = async (name, attributes) => {
-  return graphql({
-    query: createQuery,
-    variables: {
-      name,
-      attributes: JSON.stringify(attributes)
-    }
-  })
+const getByIndex = async (type, params, index) => {
+  if (!NodeTables.has(type))
+    return null
+
+  const connection = await r.connect()
+
+  return r.table(NodeTables.get(type))
+    .getAll(params, { index })
+    .nth(0)
+    .run(connection)
+    .then(result => {
+      connection.close()
+
+      if (result === null) return null
+
+      return {
+        ...result,
+        __type: type,
+      }
+    })
 }
 
 
-node.update = async (name, id, attributes) => {
-  return graphql({
-    query: updateQuery,
-    variables: {
-      name,
+const create = async (type, attributes) => {
+  if (!NodeTables.has(type))
+    throw new Error(`Unknown node type "${type}"`)
+
+  const connection = await r.connect()
+  const id = shortid.generate()
+
+  return r.table(NodeTables.get(type))
+    .insert({
+      ...attributes,
       id,
-      attributes: JSON.stringify(attributes)
-    }
-  })
+      created_at: r.now(),
+    })
+    .run(connection)
+    .then(result => {
+      connection.close()
+      return id
+    })
 }
 
 
-export default node
+const update = async (type, id, attributes) => {
+  if (!NodeTables.has(type))
+    throw new Error(`Unknown node type "${type}"`)
+
+  const connection = await r.connect()
+
+  r.table(NodeTables.get(type))
+    .get(id)
+    .update({
+      ...attributes,
+      updated_at: r.now()
+    })
+    .run(connection)
+    .then(result => {
+      connection.close()
+      return id
+    })
+}
+
+
+export default {
+  get,
+  getByIndex,
+  create,
+  update,
+}

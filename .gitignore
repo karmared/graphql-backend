@@ -9,3 +9,6 @@ build
 
 # keys
 jwtRS256*
+
+# yarn
+yarn-error.log

@@ -1,6 +1,6 @@
 import store from "/store"
 import { jwtSign } from "/utils"
-import { graphql } from "/transport"
+import { ValidationError } from "/errors"
 import { validatePassword } from "/utils"
 import { createDefinition } from "/schema/utils"
 
@@ -23,30 +23,22 @@ const definition = `
 `
 
 
-const getUserIdQuery = `
-  query q($email: String!) {
-    collection(name: "users") {
-      ... on Users {
-        getIdByEmail(email: $email)
-      }
-    }
-  }
-`
-
-
 const loginWithEmailAndPassword = async (root, { input }) => {
-  const id = await graphql({
-    query: getUserIdQuery,
-    variables: { email: input.email },
-  }).then(data => data.collection.getIdByEmail)
+  const user = await store.node
+    .getByIndex("User", input.email, "email")
+    .catch(error => null)
 
-  if (id === null)
-    throw new Error("User not found")
+  if (user === null)
+    throw new ValidationError({
+      keyword: "unknown",
+      dataPath: "/email",
+    })
 
-  const user = await store.node("users", id)
-
-  if (validatePassword(user.password, input.password) === false)
-    throw new Error("User not found")
+  if (!validatePassword(user.password, input.password))
+    throw new ValidationError({
+      keyword: "mismatch",
+      dataPath: "/password",
+    })
 
   return {
     token: jwtSign({ sub: user.id, iss: "Karma.Red" })

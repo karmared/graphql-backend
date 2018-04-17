@@ -3,20 +3,15 @@ import {
 } from "@karmared/kafka-transport"
 
 
-const graphqlWithTopic = payload =>
-  new Promise((resolve, reject) => {
-    fetch(
-      process.env.KARMA_PRODUCER_TOPIC,
-      process.env.KARMA_CONSUMER_TOPIC,
-      payload
-    )
-      .then(({ data, errors }) => {
-        if (errors) return reject(errors)
-        resolve(data)
-      })
-  })
+const mailerFetch = payload => {
+  return fetch(
+    process.env.KARMA_MAIL_TO_TOPIC,
+    process.env.KARMA_MAIL_FROM_TOPIC,
+    payload
+  )
+}
 
 
 export {
-  graphqlWithTopic as graphql,
+  mailerFetch,
 }

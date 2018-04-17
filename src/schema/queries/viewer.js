@@ -8,8 +8,8 @@ const definition = `
 `
 
 
-const viewer = () => {
-  return null
+const viewer = (root, args, context) => {
+  return context.viewer
 }
 
 
