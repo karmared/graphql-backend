@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  karma_app_backend:
+    build: ./
+    image: karma_app_backend:${APP_TAG}
+    container_name: karma_app_backend
+    hostname: karma_app_backend
+    restart: on-failure
+    networks:
+      app:
+        ipv4_address: 192.168.231.10
+
+networks:
+  app:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.231.0/24
+
