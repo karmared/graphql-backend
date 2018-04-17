@@ -1,5 +1,10 @@
 version: "3"
 
+networks:
+  karma:
+    external:
+      name: karma
+
 services:
   karma_app_backend:
     build: ./
@@ -8,14 +13,6 @@ services:
     hostname: karma_app_backend
     restart: on-failure
     networks:
-      app:
-        ipv4_address: 192.168.231.10
-
-networks:
-  app:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.231.0/24
+      karma:
+        ipv4_address: 192.168.240.25
 
