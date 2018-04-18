@@ -31,6 +31,12 @@ const expireRegistrationTokens = async email => {
         token("kind").eq("registration")
       )
     })
+    .filter(token => {
+      return store.or(
+        token("expired_at").default(null).eq(null),
+        token("accepted_at").default(null).eq(null),
+      )
+    })
     .update({
       expired_at: store.now(),
       updated_at: store.now(),
