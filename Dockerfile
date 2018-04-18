@@ -6,6 +6,8 @@ RUN apk update && \
     yarn && \
     yarn build && \
     ssh-keygen -t rsa -b 2048 -f jwtRS256.key -q -N "" && \
-    openssl rsa -in jwtRS256.key -pubout -outform PEM -out jwtRS256.key.pub
-CMD ["yarn", "serve"]
+    openssl rsa -in jwtRS256.key -pubout -outform PEM -out jwtRS256.key.pub && \
+    mv docker-entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 
