@@ -5,8 +5,6 @@ import expressCors from "cors"
 import graphqlHTTP from "express-graphql"
 import { authorization } from "/utils"
 
-import "/mailer"
-
 const options = {
   session: false,
   security: false,
