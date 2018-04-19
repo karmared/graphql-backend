@@ -22,7 +22,7 @@ const graphql = server.utils.modern(graphqlHTTP(req => {
       path: error.path,
       message: error.message,
       locations: error.locations,
-      validations: error.originalError.validations,
+      validations: error.originalError && error.originalError.validations,
     })
   }
 }))
