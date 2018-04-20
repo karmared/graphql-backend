@@ -6,6 +6,7 @@ const definition = `
     id: ID!
     email: String!
     shouldProvidePassword: Boolean!
+    shouldLoginWithOTPAuth: Boolean
   }
 `
 
