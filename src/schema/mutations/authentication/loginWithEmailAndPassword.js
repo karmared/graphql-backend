@@ -41,7 +41,7 @@ const loginWithEmailAndPassword = async (root, { input }) => {
     })
 
   return {
-    token: jwtSign({ sub: user.id, iss: "Karma.Red" })
+    token: jwtSign({ sub: user.id })
   }
 }
 

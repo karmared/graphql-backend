@@ -14,10 +14,16 @@ const PUBLIC_KEY = fs.readFileSync(
 
 
 export const jwtSign = payload => {
-  return jwt.sign(payload, PRIVATE_KEY, { algorithm: "RS256" })
+  return jwt.sign(payload, PRIVATE_KEY, {
+    algorithm: "RS256",
+    issuer: "Karma.Red",
+  })
 }
 
 
 export const jwtVerify = token => {
-  return jwt.verify(token, PUBLIC_KEY, { algorithms: ["RS256"] })
+  return jwt.verify(token, PUBLIC_KEY, {
+    algorithms: ["RS256"],
+    issuer: "Karma.Red",
+  })
 }

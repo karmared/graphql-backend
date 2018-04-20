@@ -94,7 +94,7 @@ const loginWithAuthenticationToken = async (root, { input }) => {
 
   return {
     kind: token.kind,
-    token: jwtSign({ sub: user.id, iss: "Karma.Red" }),
+    token: jwtSign({ sub: user.id }),
   }
 }
 
