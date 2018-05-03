@@ -17,6 +17,9 @@ KARMA_BACKEND_FROM_TOPIC=karma.app.from.backend
 
 KARMA_MAIL_TO_TOPIC=karma.app.to.mailer
 KARMA_MAIL_FROM_TOPIC=karma.app.from.mailer
+
+KARMA_CHAIN_TO_TOPIC=karma.app.to.chain
+KARMA_CHAIN_FROM_TOPIC=karma.app.from.chain
 ```
 Consumed from `.env` file or|and environment variables. Environment variables take precedence.
 
