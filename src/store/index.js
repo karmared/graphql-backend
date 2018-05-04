@@ -13,7 +13,7 @@ const connect = r.connect
 r.connect = () => {
   const [,db] = (config.pathname || "/test").split("/")
   const [host, port] = config.host.split(":")
-  const [user, password] = config.auth.split(":")
+  const [user, password] = (config.auth || "admin").split(":")
 
   return connect({
     db,
