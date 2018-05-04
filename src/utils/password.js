@@ -1,3 +1,4 @@
+import is from "is_js"
 import crypto from "crypto"
 
 
@@ -25,6 +26,9 @@ export const generatePassword = password => {
 
 
 export const validatePassword = (digest, password) => {
+  if (is.not.existy(digest))
+    return false
+
   const [salt, hash] = digest.split(":")
   return hash === generateHash(password, salt)
 }
