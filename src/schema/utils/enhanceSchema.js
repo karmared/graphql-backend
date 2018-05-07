@@ -2,7 +2,7 @@ import _ from "lodash"
 import { Kind } from "graphql"
 
 
-const objectTypeResolvers = ["isTypeOf"]
+const objectTypeResolvers = ["fetch", "isTypeOf"]
 
 const enhanceObjectType = (type, enhancers) => {
   const fields = type.getFields()
