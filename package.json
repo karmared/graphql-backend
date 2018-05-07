@@ -18,6 +18,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "chalk": "^2.4.0",
     "cors": "^2.8.4",
+    "dataloader": "^1.4.0",
     "dotenv": "^5.0.1",
     "dotenv-expand": "^4.0.1",
     "express-graphql": "^0.6.11",
