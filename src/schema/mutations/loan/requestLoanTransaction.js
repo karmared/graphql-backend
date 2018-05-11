@@ -55,7 +55,7 @@ const requestLoanTransaction = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
   return {
     status: response.status,
-    transaction: response.tran.toString("base64"),
+    transaction: response.data.tran.toString("base64"),
   }
 }
 
