@@ -1,3 +1,4 @@
+import schema from "/schema"
 import { chainFetch } from "/transport"
 import { fromGlobalId, createDefinition } from "/schema/utils"
 
@@ -16,7 +17,8 @@ const loans = async root => {
       user_ids: [],
     }
   })
-  return response.credit_request_ids.map(id => ({ id }))
+  const Loan = schema.getType("Loan")
+  return response.credit_request_ids.map(id => Loan.fetch(id))
 }
 
 
