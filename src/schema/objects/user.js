@@ -15,8 +15,10 @@ const definition = `
 
 const loans = async user => {
   const response = await chainFetch({
-    user_id: "1.2.144",
     oper: "get_credit_request_ids",
+    filter: {
+      user_ids: ["1.2.144"],
+    },
   })
   return response.credit_request_ids.map(id => ({ id }))
 }
