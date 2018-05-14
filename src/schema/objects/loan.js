@@ -45,6 +45,7 @@ const definition = `
   type Loan implements Node {
     id: ID!
     memo: String!
+    status: String!
     period: Int!
     percent: Int!
     created_at: String!
@@ -54,6 +55,11 @@ const definition = `
 
 const memo = loan => {
   return loan.loan.memo || ""
+}
+
+
+const status = loan => {
+  return loan.status
 }
 
 
@@ -78,6 +84,7 @@ export default createDefinition(
     Loan: {
       id: globalIdField(),
       memo,
+      status,
       period,
       percent,
       created_at,

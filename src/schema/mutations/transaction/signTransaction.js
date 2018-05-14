@@ -3,23 +3,23 @@ import { createDefinition } from "/schema/utils"
 
 
 const definition = `
-  input SignLoanTransactionInput {
+  input SignTransactionInput {
     userId: ID!
     transaction: String!
     privateKey: String!
   }
 
 
-  type SignLoanTransactionPayload {
+  type SignTransactionPayload {
     status: Boolean!
     transaction: String!
   }
 
 
   extend type Mutation {
-    signLoanTransaction(
-      input: SignLoanTransactionInput!
-    ): SignLoanTransactionPayload!
+    signTransaction(
+      input: SignTransactionInput!
+    ): SignTransactionPayload!
   }
 `
 
@@ -36,7 +36,7 @@ const payloadFromInput = input => {
 }
 
 
-const signLoanTransaction = async (root, { input }) => {
+const signTransaction = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
   return {
     status: response.status,
@@ -49,7 +49,7 @@ export default createDefinition(
   definition,
   {
     Mutation: {
-      signLoanTransaction,
+      signTransaction,
     }
   }
 )

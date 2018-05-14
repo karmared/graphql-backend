@@ -1,11 +1,13 @@
-import signLoanTransaction  from "./signLoanTransaction"
-import requestLoanTransaction from "./requestLoanTransaction"
-import broadcastLoanTransaction from "./broadcastLoanTransaction"
+import acceptLoan from "./acceptLoan"
+import cancelLoan from "./cancelLoan"
+import fulfillLoan from "./fulfillLoan"
+import requestLoan from "./requestLoan"
 import { collectDefinitions } from "/schema/utils"
 
 
 export default collectDefinitions(
-  signLoanTransaction,
-  requestLoanTransaction,
-  broadcastLoanTransaction,
+  acceptLoan,
+  cancelLoan,
+  fulfillLoan,
+  requestLoan,
 )

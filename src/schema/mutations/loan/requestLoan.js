@@ -3,29 +3,29 @@ import { createDefinition } from "/schema/utils"
 
 
 const definition = `
-  input RequestLoanTransactionAssetInput {
+  input RequestLoanAssetInput {
     amount: Int!
     assetId: ID!
   }
 
-  input RequestLoanTransactionInput {
+  input RequestLoanInput {
     userId: ID!
     period: Int!
     interest: Int!
     memo: String!
-    loan: RequestLoanTransactionAssetInput!
-    collateral: RequestLoanTransactionAssetInput!
+    loan: RequestLoanAssetInput!
+    collateral: RequestLoanAssetInput!
   }
 
-  type RequestLoanTransactionPayload {
+  type RequestLoanPayload {
     status: Boolean!
     transaction: String!
   }
 
   extend type Mutation {
-    requestLoanTransaction(
-      input: RequestLoanTransactionInput!
-    ): RequestLoanTransactionPayload!
+    requestLoan(
+      input: RequestLoanInput!
+    ): RequestLoanPayload!
   }
 `
 
@@ -51,7 +51,7 @@ const payloadFromInput = input => {
 }
 
 
-const requestLoanTransaction = async (root, { input }) => {
+const requestLoan = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
   return {
     status: response.status,
@@ -64,7 +64,7 @@ export default createDefinition(
   definition,
   {
     Mutation: {
-      requestLoanTransaction
+      requestLoan
     }
   }
 )

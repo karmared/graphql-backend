@@ -4,19 +4,19 @@ import { createDefinition } from "/schema/utils"
 
 const definition = `
 
-  input BroadcastLoanTransactionInput {
+  input BroadcastTransactionInput {
     userId: ID!
     transaction: String!
   }
 
-  type BroadcastLoanTransactionPayload {
+  type BroadcastTransactionPayload {
     status: Boolean!
   }
 
   extend type Mutation {
-    broadcastLoanTransaction(
-      input: BroadcastLoanTransactionInput!
-    ): BroadcastLoanTransactionPayload!
+    broadcastTransaction(
+      input: BroadcastTransactionInput!
+    ): BroadcastTransactionPayload!
   }
 
 `
@@ -31,7 +31,7 @@ const payloadFromInput = input => {
 }
 
 
-const broadcastLoanTransaction = async (root, { input }) => {
+const broadcastTransaction = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
   return {
     status: response.status
@@ -43,7 +43,7 @@ export default createDefinition(
   definition,
   {
     Mutation: {
-      broadcastLoanTransaction,
+      broadcastTransaction,
     }
   }
 )
