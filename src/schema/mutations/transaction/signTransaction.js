@@ -1,3 +1,4 @@
+import { base64 } from "/utils"
 import { chainFetch } from "/transport"
 import { createDefinition } from "/schema/utils"
 
@@ -40,7 +41,7 @@ const signTransaction = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
   return {
     status: response.status,
-    transaction: response.signed_tran.toString("base64"),
+    transaction: base64.enc(response.signed_tran),
   }
 }
 

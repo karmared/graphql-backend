@@ -1,11 +1,8 @@
-import {
-  base64,
-  unbase64,
-} from "/schema/utils"
+import { base64 } from "/utils"
 
 
 export const fromGlobalId = (globalId) => {
-  const unbasedGobalId = unbase64(globalId)
+  const unbasedGobalId = base64.dec(globalId)
   const delimiterPosition = unbasedGobalId.indexOf(":")
   return {
     type: unbasedGobalId.slice(0, delimiterPosition),
@@ -15,7 +12,7 @@ export const fromGlobalId = (globalId) => {
 
 
 export const toGlobalId = (type, id) => {
-  return base64([type, id].join(":"))
+  return base64.enc([type, id].join(":"))
 }
 
 
