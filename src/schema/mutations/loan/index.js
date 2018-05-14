@@ -1,6 +1,6 @@
 import acceptLoan from "./acceptLoan"
 import cancelLoan from "./cancelLoan"
-import fulfillLoan from "./fulfillLoan"
+import redeemLoan from "./redeemLoan"
 import requestLoan from "./requestLoan"
 import { collectDefinitions } from "/schema/utils"
 
@@ -8,6 +8,6 @@ import { collectDefinitions } from "/schema/utils"
 export default collectDefinitions(
   acceptLoan,
   cancelLoan,
-  fulfillLoan,
+  redeemLoan,
   requestLoan,
 )
