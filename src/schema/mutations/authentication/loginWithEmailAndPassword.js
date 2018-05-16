@@ -24,8 +24,10 @@ const definition = `
 
 
 const loginWithEmailAndPassword = async (root, { input }) => {
+  const email = input.email.trim().toLowerCase()
+
   const user = await store.node
-    .getByIndex("User", input.email, "email")
+    .getByIndex("User", email, "email")
     .catch(error => null)
 
   if (user === null)
