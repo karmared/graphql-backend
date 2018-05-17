@@ -5,7 +5,7 @@ import { createDefinition } from "/schema/utils"
 
 const definition = `
   input RequestLoanInput {
-    userId: ID!
+    walletId: ID!
     period: Int!
     interest: Int!
     memo: String!
@@ -28,7 +28,7 @@ const definition = `
 
 const payloadFromInput = input => {
   return {
-    user_id: input.userId,
+    user_id: input.walletId,
     oper: "credit_request_operation",
     data: {
       period: input.period,

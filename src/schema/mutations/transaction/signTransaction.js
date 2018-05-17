@@ -5,7 +5,7 @@ import { createDefinition } from "/schema/utils"
 
 const definition = `
   input SignTransactionInput {
-    userId: ID!
+    walletId: ID!
     transaction: String!
     privateKey: String!
   }
@@ -27,7 +27,7 @@ const definition = `
 
 const payloadFromInput = input => {
   return {
-    user_id: input.userId,
+    user_id: input.walletId,
     oper: "sign_transaction",
     data: {
       tran: Buffer.from(input.transaction, "base64"),

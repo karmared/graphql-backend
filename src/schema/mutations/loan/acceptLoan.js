@@ -5,7 +5,7 @@ import { fromGlobalId, createDefinition } from "/schema/utils"
 
 const definition = `
   input AcceptLoanInput {
-    userId: ID!
+    walletId: ID!
     loanId: ID!
   }
 
@@ -27,7 +27,7 @@ const definition = `
 const payloadFromInput = input => {
   return {
     oper: "respond_credit_request",
-    user_id: input.userId,
+    user_id: input.walletId,
     request_id: fromGlobalId(input.loanId).id,
   }
 }
