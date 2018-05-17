@@ -4,18 +4,13 @@ import { createDefinition } from "/schema/utils"
 
 
 const definition = `
-  input RequestLoanAssetInput {
-    amount: Int!
-    assetId: ID!
-  }
-
   input RequestLoanInput {
     userId: ID!
     period: Int!
     interest: Int!
     memo: String!
-    loan: RequestLoanAssetInput!
-    collateral: RequestLoanAssetInput!
+    loan: AssetInput!
+    collateral: AssetInput!
   }
 
   type RequestLoanPayload {
