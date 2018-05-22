@@ -41,7 +41,7 @@ const signTransaction = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
   return {
     status: response.status,
-    transaction: base64.enc(response.signed_tran),
+    transaction: base64.enc(response.data.signed_tran),
   }
 }
 

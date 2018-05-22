@@ -5,7 +5,6 @@ import { globalIdField, createDefinition } from "/schema/utils"
 
 const reduceRecords = records => {
   return records.reduce((memo, record) => {
-    console.log(record)
     memo[record.id] = {
       ...record,
       __type: "Loan",
@@ -27,7 +26,7 @@ const batchLoadFn = ids => {
     oper: "get_credit_requests",
     credit_request_ids: ids,
   })
-    .then(({ credit_requests }) => credit_requests)
+    .then(({ data }) => data.credit_requests)
     .then(reduceRecords)
     .then(mapRecords(ids))
 }

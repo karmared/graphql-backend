@@ -42,7 +42,6 @@ const payloadFromInput = input => {
 
 const transferFunds = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
-  console.log(response.data)
   return {
     status: response.status,
     transaction: base64.enc(response.data.tran),

@@ -22,7 +22,7 @@ const loans = async user => {
     },
   })
   const Loan = schema.getType("Loan")
-  return response.credit_request_ids.map(id => Loan.fetch(id))
+  return response.data.credit_request_ids.map(id => Loan.fetch(id))
 }
 
 
