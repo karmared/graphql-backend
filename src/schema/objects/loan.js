@@ -1,3 +1,5 @@
+import is from "is_js"
+import schema from "/schema"
 import DataLoader from "dataloader"
 import { chainFetch } from "/transport"
 import { globalIdField, createDefinition } from "/schema/utils"
@@ -43,13 +45,22 @@ const fetch = id => {
 const definition = `
   type Loan implements Node {
     id: ID!
+    code: String!
     memo: String!
-    status: String!
+    amount: Asset!
     period: Int!
+    status: String!
+    wallet: Wallet!
     percent: Int!
+    collateral: Asset
     created_at: String!
   }
 `
+
+
+const code = loan => {
+  return loan.id.split(".").pop()
+}
 
 
 const memo = loan => {
@@ -57,8 +68,11 @@ const memo = loan => {
 }
 
 
-const status = loan => {
-  return loan.status
+const amount = loan => {
+  return {
+    code: loan.loan.asset.asset_id,
+    amount: loan.loan.asset.amount,
+  }
 }
 
 
@@ -67,8 +81,28 @@ const period = loan => {
 }
 
 
+const status = loan => {
+  return loan.status
+}
+
+
+const wallet = loan => {
+  const Wallet = schema.getType("Wallet")
+  return Wallet.fetch(loan.borrower_id)
+}
+
+
 const percent = loan => {
   return loan.loan.percent
+}
+
+
+const collateral = loan => {
+  if (is.not.existy(loan.loan.collateral)) return null
+  return {
+    code: loan.loan.collateral.asset_id,
+    amount: loan.loan.collateral.amount,
+  }
 }
 
 
@@ -82,10 +116,14 @@ export default createDefinition(
   {
     Loan: {
       id: globalIdField(),
+      code,
       memo,
-      status,
+      amount,
       period,
+      status,
+      wallet,
       percent,
+      collateral,
       created_at,
       fetch,
     }
