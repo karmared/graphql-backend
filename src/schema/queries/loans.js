@@ -5,16 +5,20 @@ import { fromGlobalId, createDefinition } from "/schema/utils"
 
 const definition = `
   extend type Query {
-    loans: [Loan!]!
+    loans(
+      walletId: ID
+    ): [Loan!]!
   }
 `
 
 
-const loans = async root => {
+const loans = async (root, { walletId }) => {
+  const ids = [walletId].filter(Boolean)
+
   const response = await chainFetch({
     oper: "get_credit_request_ids",
     filter: {
-      user_ids: [],
+      user_ids: ids,
     }
   })
   const Loan = schema.getType("Loan")
