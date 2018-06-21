@@ -3,6 +3,7 @@ import objects from "./objects"
 import queries from "./queries"
 import mutations from "./mutations"
 import interfaces from "./interfaces"
+import connections from "./connections"
 import { enhanceSchema } from "/schema/utils"
 import {
   Kind,
@@ -28,6 +29,7 @@ const document = parse(`
       queries.definition,
       mutations.definition,
       interfaces.definition,
+      connections.definition,
     ]).join("\n")
   }
 `)
@@ -64,6 +66,7 @@ enhanceSchema(
       queries.enhancement,
       mutations.enhancement,
       interfaces.enhancement,
+      connections.enhancement,
     ])
   )
 )
