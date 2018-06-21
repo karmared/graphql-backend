@@ -11,8 +11,9 @@ const definition = `
   }
 
   type LoanConnection {
-    pageInfo: PageInfo!
+    count: Int!
     edges: [LoanEdge!]!
+    pageInfo: PageInfo!
   }
 
   extend type Query {
@@ -35,9 +36,7 @@ const query_loans = async (root, { first, after, walletIds }) => {
     }
   }).then(response => response.data.credit_request_ids)
 
-  return connectionFromIdsArray(
-    ids, { first, after }
-  )
+  return connectionFromIdsArray(ids, { first, after })
 }
 
 
