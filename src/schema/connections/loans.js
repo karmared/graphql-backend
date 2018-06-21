@@ -23,6 +23,13 @@ const definition = `
       walletIds: [ID!] = []
     ): LoanConnection!
   }
+
+  extend type User {
+    _loans(
+      first: Int
+      after: Cursor
+    ): LoanConnection!
+  }
 `
 
 
@@ -37,6 +44,12 @@ const query_loans = async (root, { first, after, walletIds }) => {
   }).then(response => response.data.credit_request_ids)
 
   return connectionFromIdsArray(ids, { first, after })
+}
+
+
+const user_loans = async (user, { first, after }) => {
+  const walletIds = [] // fetch wallet ids for user
+  return query_loans(null, { first, after, walletIds })
 }
 
 
@@ -55,7 +68,11 @@ export default createDefinition(
   definition,
   {
     Query: {
-      _loans: query_loans
+      _loans: query_loans,
+    },
+
+    User: {
+      _loans: user_loans,
     },
 
     LoanEdge: {
