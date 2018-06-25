@@ -48,7 +48,11 @@ const query_loans = async (root, { first, after, walletIds }) => {
 
 
 const user_loans = async (user, { first, after }) => {
-  const walletIds = [] // fetch wallet ids for user
+  const walletIds = (user.wallets || []).map(wallet => wallet.id)
+
+  if (walletIds.length === 0)
+    return connectionFromIdsArray([], { first, after })
+
   return query_loans(null, { first, after, walletIds })
 }
 
