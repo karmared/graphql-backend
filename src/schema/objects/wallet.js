@@ -55,7 +55,6 @@ export default createDefinition(
   definition,
   {
     Wallet: {
-      id: globalIdField(),
       fetch,
     }
   }
