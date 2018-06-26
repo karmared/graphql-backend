@@ -8,7 +8,7 @@ const definition = `
   }
 
   type RegisterBlockChainPublicKeyPayload {
-    walletId: ID!
+    walletIds: [ID!]!
   }
 
   extend type Mutation {
@@ -33,7 +33,7 @@ const registerBlockChainPublicKey = async (root, { input }) => {
   const response = await chainFetch(payloadFromInput(input))
 
   return {
-    walletId: response.data.wallet_id
+    walletIds: response.data.wallet_ids
   }
 }
 
