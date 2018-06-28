@@ -17,7 +17,7 @@ const definition = `
   }
 
   extend type Query {
-    _loans(
+    loans(
       first: Int
       after: Cursor
       walletIds: [ID!] = []
@@ -25,7 +25,7 @@ const definition = `
   }
 
   extend type User {
-    _loans(
+    loans(
       first: Int
       after: Cursor
     ): LoanConnection!
@@ -72,11 +72,11 @@ export default createDefinition(
   definition,
   {
     Query: {
-      _loans: query_loans,
+      loans: query_loans,
     },
 
     User: {
-      _loans: user_loans,
+      loans: user_loans,
     },
 
     LoanEdge: {
