@@ -1,9 +1,7 @@
-import node from "./node"
-import userProfile from "./userProfile"
+import createIndividualProfile from "./createIndividualProfile"
 import { collectDefinitions } from "/schema/utils"
 
 
 export default collectDefinitions(
-  node,
-  userProfile,
+  createIndividualProfile
 )

@@ -2,12 +2,10 @@ import { globalIdField, createDefinition } from "/schema/utils"
 
 
 const definition = `
-  union UserProfile = IndividualProfile
-
-
   type User implements Node {
     id: ID!
     email: String!
+
     shouldProvidePassword: Boolean!
     shouldLoginWithOTPAuth: Boolean
 
