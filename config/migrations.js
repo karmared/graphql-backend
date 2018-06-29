@@ -10,6 +10,8 @@ export default {
       ]
     }, {
       name: "tokens"
+    }, {
+      name: "user_profiles"
     }
   ]
 }

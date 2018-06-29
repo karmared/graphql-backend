@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@karmared/kafka-transport": "^0.0.2",
+    "ajv": "^6.5.1",
     "babel-cli": "^6.26.0",
     "babel-plugin-lodash": "^3.3.2",
     "babel-plugin-module-resolver": "^3.0.0",

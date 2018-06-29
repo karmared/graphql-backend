@@ -18,7 +18,7 @@ const enhanceObjectType = (type, enhancers) => {
 }
 
 
-const interfaceTypeResolvers = ["resolveType"]
+const interfaceTypeResolvers = ["fetch", "resolveType"]
 
 const enhanceInterfaceType = (type, enhancers) => {
   const fields = type.getFields()

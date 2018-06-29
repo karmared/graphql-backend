@@ -1,3 +1,5 @@
+import store from "/store"
+import schema from "/schema"
 import { globalIdField, createDefinition } from "/schema/utils"
 
 
@@ -19,8 +21,24 @@ const shouldProvidePassword = user => {
 }
 
 
-const profiles = user => {
-  return []
+const profiles = async user => {
+  const connection = await store.connect()
+
+  const ids = await store.table("user_profiles")
+    .filter(profile => profile("user")("id").eq(user.id))
+    .pluck(["id", "kind"])
+    .run(connection)
+    .then(cursor => {
+      return cursor.toArray()
+    })
+    .then(ids => {
+      connection.close()
+      return ids
+    })
+
+  const UserProfile = schema.getType("UserProfile")
+
+  return ids.map(id => UserProfile.fetch(id))
 }
 
 

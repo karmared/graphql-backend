@@ -1,96 +1,92 @@
 import is from "is_js"
 import store from "/store"
-import shortid from "shortid"
 import jsonSchema from "/json-schema"
 import { ValidationError } from "/errors"
-import { createDefinition } from "/schema/utils"
+import { fromGlobalId, createDefinition } from "/schema/utils"
 
 
 const definition = /* GraphQL */`
-  input CreateIndividualProfileInput {
+  input UpdateIndividualProfileInput {
+    id: ID!
     name: String!
     nickname: String!
   }
 
-
-  type CreateIndividualProfilePayload {
-    user: User!
+  type UpdateIndividualProfilePayload {
     profile: IndividualProfile!
   }
 
-
   extend type Mutation {
-    createIndividualProfile(
-      input: CreateIndividualProfileInput!
-    ): CreateIndividualProfilePayload!
+    updateIndividualProfile(
+      input: UpdateIndividualProfileInput!
+    ): UpdateIndividualProfilePayload!
   }
 `
 
 
-const isIndividualProfileExists = async userId => {
+const findIndividualProfileForUser = async (userId, profileId) => {
   const connection = await store.connect()
 
   return store.table("user_profiles")
     .filter(profile => profile("user")("id").eq(userId))
     .filter(profile => profile("kind").eq("individual"))
-    .count()
-    .gt(0)
+    .nth(0)
     .run(connection)
-    .then(result => {
+    .then(record => {
       connection.close()
-      return result
+      return fromGlobalId(profileId).id === record.id
+        ? record.id
+        : null
+    })
+    .catch(() => {
+      connection.close()
+      return null
     })
 }
 
 
-const create = async (userId, attributes) => {
-  const id = shortid.generate()
-
+const update = async (profileId, attributes) => {
   const connection = await store.connect()
   await store.table("user_profiles")
-    .insert({
+    .get(profileId)
+    .update({
       ...attributes,
-      id,
-      kind: "individual",
-      user: {
-        id: userId,
-      },
-      created_at: store.now(),
+      updated_at: store.now(),
     })
     .run(connection)
     .then(() => {
       connection.close()
     })
 
-  return id
+  return true
 }
 
 
-const createIndividualProfile = async (root, { input }, { viewer }) => {
+const updateIndividualProfile = async (root, { input }, { viewer }) => {
   if (is.not.existy(viewer))
     throw new ValidationError({
       keyword: "presence",
       dataPath: "/viewer",
     })
 
-
-  if (await isIndividualProfileExists(viewer.id))
+  const profileId = await findIndividualProfileForUser(viewer.id, input.id)
+  if (is.not.existy(profileId))
     throw new ValidationError({
-      keyword: "uniqueness",
+      keyword: "presence",
       dataPath: "/profile",
     })
 
+  const attributes = {...input}
 
-  await jsonSchema.validate("individual-profile", input)
+  await jsonSchema.validate("individual-profile", attributes)
     .catch(error => {
       throw new ValidationError(error.errors)
     })
 
-  const profileId = await create(viewer.id, input)
+  await update(profileId, attributes)
 
   return {
-    user: viewer,
-    profile: store.node.get("IndividualProfile", id),
+    profile: store.node.get(input.id)
   }
 }
 
@@ -99,7 +95,7 @@ export default createDefinition(
   definition,
   {
     Mutation: {
-      createIndividualProfile
+      updateIndividualProfile,
     }
   }
 )

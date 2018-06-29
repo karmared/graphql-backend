@@ -1,40 +1,27 @@
+import store from "/store"
 import { globalIdField, createDefinition } from "/schema/utils"
 
 
 const definition = `
-
-  type UserPhone {
-    number: String!
-    validatedAt: String!
-  }
-
-  type UserAvatar {
+  type IndividualProfile implements UserProfile {
     id: ID!
-    url: String!
+    name: String!
+    nickname: String!
   }
-
-  type IndividualProfile {
-    id: ID!
-    fullName: String!
-    nickName: String!
-    phone: UserPhone
-    avatar: UserAvatar
-  }
-
 `
+
+
+const fetch = id => {
+  return store.node.get("IndividualProfile", id)
+}
 
 
 export default createDefinition(
   definition,
   {
-    UserPhone: {
-
-    },
-    UserAvatar: {
-
-    },
     IndividualProfile: {
-
+      id: globalIdField(),
+      fetch,
     }
   }
 )

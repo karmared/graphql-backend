@@ -6,6 +6,7 @@ import { fromGlobalId } from "/schema/utils"
 const NodeTables = new Map([
   ["User", "users"],
   ["Token", "tokens"],
+  ["IndividualProfile", "user_profiles"],
 ])
 
 
