@@ -1,5 +1,6 @@
 import is from "is_js"
 import store from "/store"
+import schema from "/schema"
 import shortid from "shortid"
 import jsonSchema from "/json-schema"
 import { ValidationError } from "/errors"
@@ -90,7 +91,7 @@ const createIndividualProfile = async (root, { input }, { viewer }) => {
 
   return {
     user: viewer,
-    profile: store.node.get("IndividualProfile", id),
+    profile: schema.getType("IndividualProfile").fetch(profileId),
   }
 }
 
