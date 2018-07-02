@@ -1,8 +1,9 @@
 import is from "is_js"
 import store from "/store"
+import { signPhone } from "./utils"
+import { normalizePhone } from "/utils"
 import { ValidationError } from "/errors"
 import { createDefinition } from "/schema/utils"
-import { jwtSign, normalizePhone } from "/utils"
 
 
 const definition = /* GraphQL */`
@@ -86,7 +87,7 @@ const confirmPhone = async (root, { input }, { viewer }) => {
   })
 
   return {
-    signedPhone: jwtSign({ phone, sub: viewer.id })
+    signedPhone: signPhone(phone, viewer.id)
   }
 }
 

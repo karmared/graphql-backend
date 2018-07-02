@@ -1,8 +1,8 @@
 import is from "is_js"
 import store from "/store"
 import { validate } from "/json-schema"
-import { jwtVerify } from "/utils"
 import { ValidationError } from "/errors"
+import { verifySignedPhone } from "./utils"
 import { fromGlobalId, createDefinition } from "/schema/utils"
 
 
@@ -44,23 +44,6 @@ const findIndividualProfileForUser = async (userId, profileId) => {
       connection.close()
       return null
     })
-}
-
-
-const verifySignedPhone = (signedPhone, userId) => {
-  if (is.not.existy(signedPhone)) return null
-
-  try {
-    const { phone, sub } = jwtVerify(signedPhone)
-    if (sub !== userId) throw new Error()
-
-    return phone
-  } catch (error) {
-    throw new ValidationError({
-      keyword: "invalid",
-      dataPath: "/signedPhone",
-    })
-  }
 }
 
 

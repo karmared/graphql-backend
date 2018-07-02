@@ -2,9 +2,9 @@ import is from "is_js"
 import store from "/store"
 import schema from "/schema"
 import { validate } from "/json-schema"
-import { jwtVerify } from "/utils"
 import { ValidationError } from "/errors"
 import { createDefinition } from "/schema/utils"
+import { verifySignedPhone } from "./utils"
 
 
 const definition = /* GraphQL */`
@@ -42,23 +42,6 @@ const isIndividualProfileExists = async userId => {
       connection.close()
       return result
     })
-}
-
-
-const verifySignedPhone = (signedPhone, userId) => {
-  if (is.not.existy(signedPhone)) return null
-
-  try {
-    const { phone, sub } = jwtVerify(signedPhone)
-    if (sub !== userId) throw new Error()
-
-    return phone
-  } catch (error) {
-    throw new ValidationError({
-      keyword: "invalid",
-      dataPath: "/signedPhone",
-    })
-  }
 }
 
 
