@@ -10,7 +10,12 @@ export default {
 
     nickname: {
       type: "string",
-      minLength: 1
+      minLength: 1,
+    },
+
+    phone: {
+      type: "string",
+      minLength: 11,
     }
   },
   additionalProperties: false,

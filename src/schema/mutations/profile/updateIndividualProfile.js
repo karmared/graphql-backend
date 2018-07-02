@@ -1,6 +1,7 @@
 import is from "is_js"
 import store from "/store"
 import { validate } from "/json-schema"
+import { jwtVerify } from "/utils"
 import { ValidationError } from "/errors"
 import { fromGlobalId, createDefinition } from "/schema/utils"
 
@@ -10,6 +11,7 @@ const definition = /* GraphQL */`
     id: ID!
     name: String!
     nickname: String!
+    signedPhone: String
   }
 
   type UpdateIndividualProfilePayload {
@@ -45,6 +47,23 @@ const findIndividualProfileForUser = async (userId, profileId) => {
 }
 
 
+const verifySignedPhone = (signedPhone, userId) => {
+  if (is.not.existy(signedPhone)) return null
+
+  try {
+    const { phone, sub } = jwtVerify(signedPhone)
+    if (sub !== userId) throw new Error()
+
+    return phone
+  } catch (error) {
+    throw new ValidationError({
+      keyword: "invalid",
+      dataPath: "/signedPhone",
+    })
+  }
+}
+
+
 const updateIndividualProfile = async (root, { input }, { viewer }) => {
   if (is.not.existy(viewer))
     throw new ValidationError({
@@ -63,6 +82,9 @@ const updateIndividualProfile = async (root, { input }, { viewer }) => {
     ...profile,
     ...input,
   }
+
+  const phone = verifySignedPhone(input.signedPhone, viewer.id)
+  if (is.existy(phone)) attributes.phone = phone
 
   await validate("individual-profile", attributes)
 

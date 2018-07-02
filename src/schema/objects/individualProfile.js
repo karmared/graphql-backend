@@ -7,6 +7,7 @@ const definition = `
     id: ID!
     name: String!
     nickname: String!
+    phone: String
   }
 `
 
