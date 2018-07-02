@@ -31,16 +31,14 @@ const phoneFetch = ({ message, receiver }) => {
     {
       message,
       receiver,
-      dryRun: true,
+      dryRun: false,
     }
   )
 }
 
 
-// phoneFetch({ message: "Test", receiver: "79262543421" }).then(console.log).catch(console.log)
-
-
 export {
   chainFetch,
+  phoneFetch,
   mailerFetch,
 }
