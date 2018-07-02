@@ -42,6 +42,11 @@ const profiles = async user => {
 }
 
 
+const fetch = id => {
+  return store.node.get("User", id)
+}
+
+
 export default createDefinition(
   definition,
   {
@@ -49,6 +54,7 @@ export default createDefinition(
       id: globalIdField(),
       shouldProvidePassword,
       profiles,
+      fetch,
     }
   }
 )

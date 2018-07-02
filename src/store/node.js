@@ -99,9 +99,27 @@ const update = async (type, id, attributes) => {
 }
 
 
+const remove = async (type, id) => {
+  if (!NodeTables.has(type))
+    throw new Error(`Unknown node type "${type}"`)
+
+  const connection = await r.connect()
+
+  r.table(NodeTables.get(type))
+    .get(id)
+    .delete()
+    .run(connection)
+    .then(result => {
+      connection.close()
+      return id
+    })
+}
+
+
 export default {
   get,
   getByIndex,
   create,
   update,
+  remove,
 }

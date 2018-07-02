@@ -1,6 +1,6 @@
 import is from "is_js"
 import store from "/store"
-import jsonSchema from "/json-schema"
+import { validate } from "/json-schema"
 import { ValidationError } from "/errors"
 import { fromGlobalId, createDefinition } from "/schema/utils"
 
@@ -35,30 +35,13 @@ const findIndividualProfileForUser = async (userId, profileId) => {
     .then(record => {
       connection.close()
       return fromGlobalId(profileId).id === record.id
-        ? record.id
+        ? record
         : null
     })
     .catch(() => {
       connection.close()
       return null
     })
-}
-
-
-const update = async (profileId, attributes) => {
-  const connection = await store.connect()
-  await store.table("user_profiles")
-    .get(profileId)
-    .update({
-      ...attributes,
-      updated_at: store.now(),
-    })
-    .run(connection)
-    .then(() => {
-      connection.close()
-    })
-
-  return true
 }
 
 
@@ -69,21 +52,25 @@ const updateIndividualProfile = async (root, { input }, { viewer }) => {
       dataPath: "/viewer",
     })
 
-  const profileId = await findIndividualProfileForUser(viewer.id, input.id)
-  if (is.not.existy(profileId))
+  const profile = await findIndividualProfileForUser(viewer.id, input.id)
+  if (is.not.existy(profile))
     throw new ValidationError({
       keyword: "presence",
       dataPath: "/profile",
     })
 
-  const attributes = {...input}
+  const attributes = {
+    ...profile,
+    ...input,
+  }
 
-  await jsonSchema.validate("individual-profile", attributes)
-    .catch(error => {
-      throw new ValidationError(error.errors)
-    })
+  await validate("individual-profile", attributes)
 
-  await update(profileId, attributes)
+  await store.node.update(
+    "IndividualProfile",
+    profile.id,
+    attributes,
+  )
 
   return {
     profile: store.node.get(input.id)

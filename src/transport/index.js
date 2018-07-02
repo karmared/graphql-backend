@@ -24,6 +24,22 @@ const chainFetch = payload => {
 }
 
 
+const phoneFetch = ({ message, receiver }) => {
+  return fetch(
+    process.env.KARMA_PHONE_TO_TOPIC,
+    process.env.KARMA_PHONE_FROM_TOPIC,
+    {
+      message,
+      receiver,
+      dryRun: true,
+    }
+  )
+}
+
+
+// phoneFetch({ message: "Test", receiver: "79262543421" }).then(console.log).catch(console.log)
+
+
 export {
   chainFetch,
   mailerFetch,

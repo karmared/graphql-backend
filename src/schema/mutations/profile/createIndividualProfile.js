@@ -1,8 +1,7 @@
 import is from "is_js"
 import store from "/store"
 import schema from "/schema"
-import shortid from "shortid"
-import jsonSchema from "/json-schema"
+import { validate } from "/json-schema"
 import { ValidationError } from "/errors"
 import { createDefinition } from "/schema/utils"
 
@@ -44,29 +43,6 @@ const isIndividualProfileExists = async userId => {
 }
 
 
-const create = async (userId, attributes) => {
-  const id = shortid.generate()
-
-  const connection = await store.connect()
-  await store.table("user_profiles")
-    .insert({
-      ...attributes,
-      id,
-      kind: "individual",
-      user: {
-        id: userId,
-      },
-      created_at: store.now(),
-    })
-    .run(connection)
-    .then(() => {
-      connection.close()
-    })
-
-  return id
-}
-
-
 const createIndividualProfile = async (root, { input }, { viewer }) => {
   if (is.not.existy(viewer))
     throw new ValidationError({
@@ -82,12 +58,22 @@ const createIndividualProfile = async (root, { input }, { viewer }) => {
     })
 
 
-  await jsonSchema.validate("individual-profile", input)
-    .catch(error => {
-      throw new ValidationError(error.errors)
-    })
+  const attributes = {
+    ...input,
+  }
 
-  const profileId = await create(viewer.id, input)
+  await validate("individual-profile", attributes)
+
+  const profileId = await store.node.create(
+    "IndividualProfile",
+    {
+      ...attributes,
+      kind: "individual",
+      user: {
+        id: viewer.id,
+      },
+    }
+  )
 
   return {
     user: viewer,

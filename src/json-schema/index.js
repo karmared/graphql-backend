@@ -1,5 +1,6 @@
 import Ajv from "ajv"
 import schemas from "./schemas"
+import { ValidationError } from "/errors"
 
 
 const validator = new Ajv({
@@ -13,4 +14,15 @@ const validator = new Ajv({
 })
 
 
+const validate = (...args) => {
+  return validator.validate(...args).catch(({ errors }) => {
+    throw new ValidationError(errors)
+  })
+}
+
+
 export default validator
+
+export {
+  validate
+}
