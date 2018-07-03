@@ -20,6 +20,9 @@ KARMA_MAIL_FROM_TOPIC=karma.app.from.mailer
 
 KARMA_CHAIN_TO_TOPIC=karma.app.to.chain
 KARMA_CHAIN_FROM_TOPIC=karma.app.from.chain
+
+CDN_HOST=...
+CDN_PATH=...
 ```
 Consumed from `.env` file or|and environment variables. Environment variables take precedence.
 
