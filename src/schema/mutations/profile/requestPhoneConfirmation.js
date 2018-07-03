@@ -73,6 +73,7 @@ const requestPhoneConfirmation = async (root, { input }, { viewer }) => {
   await phoneFetch({
     message: `Token: ${token}`,
     receiver: phone,
+    immediate: true,
   })
 
   await store.node.create(

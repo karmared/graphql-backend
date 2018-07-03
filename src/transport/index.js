@@ -24,13 +24,14 @@ const chainFetch = payload => {
 }
 
 
-const phoneFetch = ({ message, receiver }) => {
+const phoneFetch = ({ message, receiver, immediate }) => {
   return fetch(
     process.env.KARMA_PHONE_TO_TOPIC,
     process.env.KARMA_PHONE_FROM_TOPIC,
     {
       message,
       receiver,
+      immediate,
       dryRun: false,
     }
   )
