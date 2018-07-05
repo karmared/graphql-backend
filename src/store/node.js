@@ -1,6 +1,6 @@
 import r from "/store"
 import shortid from "shortid"
-import { fromGlobalId } from "/schema/utils"
+import { fromGlobalId } from "/graphql-schema"
 
 
 const NodeTables = new Map([
