@@ -56,7 +56,7 @@ const user_loans = async (user, { first, after }) => {
 
 
 const loanEdgeNode = edge => {
-  const Loan = schema.getType("Loan")
+  const Loan = schema.get(schema.KarmaRed).getType("Loan")
   return Loan.fetch(edge.id)
 }
 

@@ -61,7 +61,7 @@ const removeProfile = async (root, { input }, { viewer }) => {
   )
 
   return {
-    user: schema.getType("User").fetch(viewer.id)
+    user: schema.get(schema.KarmaRed).getType("User").fetch(viewer.id)
   }
 }
 
