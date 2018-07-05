@@ -1,7 +1,7 @@
 import is from "is_js"
 import fse from "fs-extra"
 import path from "path"
-// import sharp from "sharp"
+import sharp from "sharp"
 import schema from "/graphql-schema"
 import shortid from "shortid"
 import { URL } from "url"
