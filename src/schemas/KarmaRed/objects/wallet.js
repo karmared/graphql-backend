@@ -41,7 +41,7 @@ const fetch = id => {
 
 
 
-const definition = `
+const definition = /* GraphQL */`
   type Wallet implements Node {
     id: ID!
     name: String!

@@ -2,7 +2,7 @@ import store from "/store"
 import schema, { globalIdField } from "/graphql-schema"
 
 
-const definition = `
+const definition = /* GraphQL */`
   type IndividualProfile implements UserProfile {
     id: ID!
     name: String!

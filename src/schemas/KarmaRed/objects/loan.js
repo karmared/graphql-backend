@@ -41,7 +41,7 @@ const fetch = id => {
 }
 
 
-const definition = `
+const definition = /* GraphQL */`
   type Loan implements Node {
     id: ID!
     code: String!

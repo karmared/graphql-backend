@@ -1,7 +1,7 @@
 import schema from "/graphql-schema"
 
 
-const definition = `
+const definition = /* GraphQL */`
   type Asset {
     code: ID!
     amount: Float!
