@@ -1,7 +1,10 @@
-class ChainError extends Error {
+import { GraphQLError } from "graphql"
+
+
+class ChainError extends GraphQLError {
   constructor(error) {
     super("Chain error")
-    this.chainError = error
+    this.chain = error
   }
 }
 

@@ -1,8 +1,3 @@
-import ChainError from "./ChainError"
-import ValidationError from "./ValidationError"
-
-
-export {
-  ChainError,
-  ValidationError,
-}
+export ChainError from "./ChainError"
+export ValidationError from "./ValidationError"
+export AuthorizationError from "./AuthorizationError"

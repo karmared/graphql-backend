@@ -23,8 +23,9 @@ const formatError = error => ({
   path: error.path,
   message: error.message,
   locations: error.locations,
-  chainError: error.originalError && error.originalError.chainError,
+  chain: error.originalError && error.originalError.chain,
   validations: error.originalError && error.originalError.validations,
+  authorization: error.originalError && error.originalError.authorization,
 })
 
 

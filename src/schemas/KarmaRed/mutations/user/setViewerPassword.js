@@ -1,5 +1,6 @@
 import store from "/store"
 import schema from "/graphql-schema"
+import { authorize } from "/cancan"
 import { ValidationError } from "/errors"
 import { generatePassword } from "/utils"
 
@@ -26,11 +27,7 @@ const MIN_PASSWORD_LENGTH = 8
 
 
 const setViewerPassword = async (root, { input }, { viewer }) => {
-  if (viewer === null)
-    throw new ValidationError({
-      keyword: "presence",
-      dataPath: "/viewer",
-    })
+  await authorize(viewer, "update password", viewer)
 
   const password = input.password.trim()
   if (password.length < MIN_PASSWORD_LENGTH)
