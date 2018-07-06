@@ -1,8 +1,17 @@
+import is from "is_js"
 import store from "/store"
+import { authorize } from "/cancan"
 import schema, { globalIdField } from "/graphql-schema"
 
 
 const definition = /* GraphQL */`
+
+  type UserVisibility {
+    personal: Boolean!
+    profiles: Boolean!
+  }
+
+
   type User implements Node {
     id: ID!
     email: String!
@@ -11,6 +20,8 @@ const definition = /* GraphQL */`
     shouldLoginWithOTPAuth: Boolean
 
     profiles: [UserProfile!]!
+
+    visibility: UserVisibility!
   }
 `
 
@@ -41,6 +52,18 @@ const profiles = async user => {
 }
 
 
+const visibility = async (user, args, { viewer }) => {
+  await authorize(viewer, "read visibility", user)
+
+  const { personal, profiles } = { ...user.visibility }
+
+  return {
+    personal: is.boolean(personal) ? personal : true,
+    profiles: is.boolean(profiles) ? profiles : true,
+  }
+}
+
+
 const fetch = id => {
   return store.node.get("User", id)
 }
@@ -54,6 +77,7 @@ schema.add(
       id: globalIdField(),
       shouldProvidePassword,
       profiles,
+      visibility,
       fetch,
     }
   }
