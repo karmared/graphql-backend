@@ -27,5 +27,6 @@ export default {
 }
 
 
+export * from "./errors"
 export * from "./globalId"
 export * from "./connection"

@@ -3,7 +3,7 @@ import "/schemas"
 import server from "server"
 import expressCors from "cors"
 import graphqlHTTP from "express-graphql"
-import GraphQLSchema from "/graphql-schema"
+import GraphQLSchema, { formatError } from "/graphql-schema"
 import { authorization } from "/utils"
 
 
@@ -17,16 +17,6 @@ const options = {
 
 
 const cors = server.utils.modern(expressCors({}))
-
-
-const formatError = error => ({
-  path: error.path,
-  message: error.message,
-  locations: error.locations,
-  chain: error.originalError && error.originalError.chain,
-  validations: error.originalError && error.originalError.validations,
-  authorization: error.originalError && error.originalError.authorization,
-})
 
 
 const KarmaRedGraphQL =server.utils.modern(graphqlHTTP(req => {

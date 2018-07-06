@@ -1,8 +1,6 @@
 import is from "is_js"
 import { AuthorizationError } from "/errors"
 
-console.log(AuthorizationError)
-
 
 let Abilities = []
 
