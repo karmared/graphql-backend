@@ -21,6 +21,7 @@
     "chalk": "^2.4.0",
     "cors": "^2.8.4",
     "dataloader": "^1.4.0",
+    "date-fns": "^1.29.0",
     "dotenv": "^6.0.0",
     "dotenv-expand": "^4.0.1",
     "express-graphql": "^0.6.11",

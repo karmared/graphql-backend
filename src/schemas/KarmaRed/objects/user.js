@@ -1,10 +1,17 @@
 import is from "is_js"
 import store from "/store"
+import { format } from "date-fns"
 import { authorize } from "/cancan"
 import schema, { globalIdField } from "/graphql-schema"
 
 
 const definition = /* GraphQL */`
+
+  type UserPassword {
+    present: Boolean!
+    updated_at: String
+  }
+
 
   type UserVisibility {
     personal: Boolean!
@@ -21,6 +28,7 @@ const definition = /* GraphQL */`
 
     profiles: [UserProfile!]!
 
+    password: UserPassword!
     visibility: UserVisibility!
   }
 `
@@ -52,6 +60,16 @@ const profiles = async user => {
 }
 
 
+const password = async (user, args, { viewer }) => {
+  await authorize(viewer, "read password", user)
+
+  return {
+    present: is.existy(user.password),
+    updated_at: user.updated_at && format(user.updated_at),
+  }
+}
+
+
 const visibility = async (user, args, { viewer }) => {
   await authorize(viewer, "read visibility", user)
 
@@ -77,6 +95,7 @@ schema.add(
       id: globalIdField(),
       shouldProvidePassword,
       profiles,
+      password,
       visibility,
       fetch,
     }
