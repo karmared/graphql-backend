@@ -1,8 +1,9 @@
+import is from "is_js"
 import store from "/store"
 import schema from "/graphql-schema"
 import { authorize } from "/cancan"
 import { ValidationError } from "/errors"
-import { generatePassword } from "/utils"
+import { generatePassword, validatePassword } from "/utils"
 
 
 const definition = /* GraphQL */`
@@ -37,6 +38,18 @@ const setViewerPassword = async (root, { input }, { viewer }) => {
       params: {
         min: MIN_PASSWORD_LENGTH
       }
+    })
+
+  const user = await store.node.get("User", viewer.id)
+
+  if (
+    is.existy(user.password)
+    &&
+    !validatePassword(user.password, input.current_password)
+  )
+    throw new ValidationError({
+      keyword: "invalid",
+      dataPath: "/current_password",
     })
 
   await store.node.update("User", viewer.id, {
