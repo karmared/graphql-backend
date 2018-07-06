@@ -4,9 +4,13 @@ import { fromGlobalId } from "/graphql-schema"
 
 
 const NodeTables = new Map([
+  // Karma Red
   ["User", "users"],
   ["Token", "tokens"],
   ["IndividualProfile", "user_profiles"],
+
+  // Back Office
+  ["Profile", "user_profiles"],
 ])
 
 

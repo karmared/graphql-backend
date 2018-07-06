@@ -1,12 +1,17 @@
-import "./objects"
-import "./queries"
-import "./connections"
+import "./profiles"
 
 import Schema from "/graphql-schema"
 
 
 const definition = /* GraphQL */`
-  type Query
+
+  scalar Cursor
+
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+  }
+
 `
 
 
