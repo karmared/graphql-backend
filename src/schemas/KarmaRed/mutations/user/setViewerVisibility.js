@@ -1,5 +1,5 @@
 import store from "/store"
-import schema from "/graphql-schema"
+import Schema from "/graphql-schema"
 import { authorize } from "/cancan"
 
 
@@ -23,7 +23,7 @@ const definition = /* GraphQL */`
 `
 
 
-const setViewerVisibility = async (root, { input }, { viewer }) => {
+const setViewerVisibility = async (root, { input }, { viewer }, { schema }) => {
   await authorize(viewer, "update visibility", viewer)
 
   await store.node.update("User", viewer.id, {
@@ -34,13 +34,13 @@ const setViewerVisibility = async (root, { input }, { viewer }) => {
   })
 
   return {
-    user: store.node.get("User", viewer.id)
+    user: schema.getType("User").fetch(viewer.id)
   }
 }
 
 
-schema.add(
-  schema.KarmaRed,
+Schema.add(
+  Schema.KarmaRed,
   definition, {
     Mutation: {
       setViewerVisibility

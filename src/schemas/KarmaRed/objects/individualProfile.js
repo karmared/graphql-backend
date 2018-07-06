@@ -1,5 +1,5 @@
 import store from "/store"
-import schema, { globalIdField } from "/graphql-schema"
+import Schema, { globalIdField } from "/graphql-schema"
 
 
 const definition = /* GraphQL */`
@@ -8,8 +8,14 @@ const definition = /* GraphQL */`
     name: String!
     nickname: String!
     phone: String
+    bankAccounts: [BankAccount!]!
   }
 `
+
+
+const bankAccounts = profile => {
+  return [].concat(profile.bankAccounts).filter(Boolean)
+}
 
 
 const fetch = id => {
@@ -17,12 +23,13 @@ const fetch = id => {
 }
 
 
-schema.add(
-  schema.KarmaRed,
+Schema.add(
+  Schema.KarmaRed,
   definition,
   {
     IndividualProfile: {
       id: globalIdField(),
+      bankAccounts,
       fetch,
     }
   }

@@ -21,6 +21,9 @@ KARMA_MAIL_FROM_TOPIC=karma.app.from.mailer
 KARMA_CHAIN_TO_TOPIC=karma.app.to.chain
 KARMA_CHAIN_FROM_TOPIC=karma.app.from.chain
 
+KARMA_BANK_TO_TOPIC=karma.backoffice.to.bank
+KARMA_BANK_FROM_TOPIC=karma.backoffice.from.bank
+
 CDN_HOST=...
 CDN_PATH=...
 ```

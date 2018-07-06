@@ -2,6 +2,15 @@ import { ChainError } from "/errors"
 import { fetch } from "@karmared/kafka-transport"
 
 
+const bankFetch = payload => {
+  return fetch(
+    process.env.KARMA_BANK_TO_TOPIC,
+    process.env.KARMA_BANK_FROM_TOPIC,
+    payload
+  )
+}
+
+
 const mailerFetch = payload => {
   return fetch(
     process.env.KARMA_MAIL_TO_TOPIC,
@@ -39,6 +48,7 @@ const phoneFetch = ({ message, receiver, immediate }) => {
 
 
 export {
+  bankFetch,
   chainFetch,
   phoneFetch,
   mailerFetch,

@@ -5,6 +5,7 @@ import schema from "/graphql-schema"
 const definition = /* GraphQL */`
   interface UserProfile {
     id: ID!
+    bankAccounts: [BankAccount!]!
   }
 `
 
